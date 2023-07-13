@@ -1,25 +1,47 @@
+import 'package:bloc_test/screens/sign_in_screens/login_screen/login_screen.dart';
 import 'package:bloc_test/utils/colors.dart';
 import 'package:bloc_test/utils/fonts.dart';
+import 'package:bloc_test/utils/navigation_file.dart';
+import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatelessWidget {
-  SplashScreen({super.key});
+import '../../utils/constants.dart';
 
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
   final Fonts _fonts = Fonts();
 
-  double w = 0;
-  double h = 0;
+  @override
+  void initState() {
+    _navigate();
+    super.initState();
+  }
+
+  _navigate() {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (mounted) {
+        AppNavigation.pushReplacement(context: context, screen: LoginScreen());
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    w = MediaQuery.of(context).size.width;
-    h = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Stack(
         children: [
           Image.asset(
-            "assets/images/splash_bg.png",
+            AppImages.splashBG,
             fit: BoxFit.fitWidth,
-            width: w,
+            width: width,
           ),
           Container(
             // height: h / 2,
@@ -36,13 +58,13 @@ class SplashScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
-                  "assets/images/logo.png",
+                  AppImages.appLogo,
                   width: 300,
                   height: 200,
                   fit: BoxFit.fill,
                 ),
                 Text(
-                  "FoodNinja",
+                  AppStrings.splashTitle,
                   style: _fonts.vigaFont(
                       size: 40,
                       color: k53E88B,
@@ -57,7 +79,7 @@ class SplashScreen extends StatelessWidget {
                       ]),
                 ),
                 Text(
-                  "Deliver favourite food",
+                  AppStrings.splashSubTitle,
                   style: _fonts.inter(
                       size: 13,
                       weight: FontWeight.w600,

@@ -1,7 +1,11 @@
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_blocs.dart';
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_states.dart';
+import 'package:bloc_test/screens/no_internet_screen/no_internet_screen.dart';
+import 'package:bloc_test/utils/colors.dart';
+import 'package:bloc_test/utils/navigation_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'screens/splash_screen/splash_screen.dart';
 
 void main() {
@@ -15,31 +19,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:(context) => InternetBloc(),
+      create: (context) => InternetBloc(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
+          useMaterial3: true,
+          primaryColor: primaryColor,
         ),
-        home: BlocBuilder<InternetBloc, InternetState>(builder: (BuildContext context, state) {
-          switch (state.runtimeType) {
-            case InternetGainedState:
-              return SplashScreen();
-            case InternetLostState:
-              return Scaffold(body: Center(child: Text("data")),);
-            default:
-              return SplashScreen();
-          }
-        },
+        home: BlocListener<InternetBloc, InternetState>(
+          // listenWhen: (state, current) => current is InternetLostState,
+          bloc: InternetBloc(),
+          listener: (BuildContext context, state) {
+            print(state.runtimeType);
+            if (state is InternetLostState) {
+              AppNavigation.push(context: context, screen: NoInternetScreen());
+            } else {
+              AppNavigation.push(context: context, screen: SplashScreen());
+            }
+            /* switch (state.runtimeType) {
+              case InternetGainedState:
+                return SplashScreen();
+              case InternetLostState:
+                return const NoInternetScreen();
+              default:
+                return SplashScreen();
+            }*/
+          },
+          child: const MyHomePage(title: "title"),
         ),
       ),
     );
