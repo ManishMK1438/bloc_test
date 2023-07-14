@@ -28,4 +28,18 @@ class AppNavigation {
         )
         .then((value) => then);
   }
+
+  static void pushAndRemove(
+      {required BuildContext context, required Widget screen, Function? then}) {
+    Navigator.of(context)
+        .pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (ctx, anim1, anim2) => screen,
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder: (_, a, __, widget) =>
+                  FadeTransition(opacity: a, child: widget),
+            ),
+            (route) => false)
+        .then((value) => then);
+  }
 }

@@ -2,6 +2,7 @@ class AppImages {
   static const noInternet = "assets/images/no_internet.png";
   static const splashBG = "assets/images/splash_bg.png";
   static const appLogo = "assets/images/logo.png";
+  static const morning = "assets/images/morning.jpg";
 }
 
 class AppStrings {
@@ -17,4 +18,20 @@ class AppStrings {
   static const login = "Login";
   static const enterValidEmail = "Please enter a valid email.";
   static const enterValidPassword = "Please enter a valid password.";
+  static const fieldCannotBeEmpty = "This field cannot be empty.";
+  static const name = "Name";
+  static const phoneNumber = "Phone Number";
+  static const confirmPassword = "Confirm Password";
+  static const signUpHere = "Sign Up here";
+  static const detailsAreSafeWithUs = "Your details are safe with us.";
+  static const home = "Home";
+  static const profile = "Profile";
+  static const feed = "Feed";
+  static const chat = "Chat";
+  static const goodMorning = "Good Morning";
+  static const goodAfternoon = "Good Afternoon";
+  static const goodEvening = "Good Evening";
+  static const like = "Like";
+  static const comment = "Comment";
+  static const save = "Save";
 }

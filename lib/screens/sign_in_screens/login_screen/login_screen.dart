@@ -9,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/colors.dart';
+import '../../dashboard_screens/tabs_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -50,7 +51,8 @@ class LoginScreen extends StatelessWidget {
               }
             },
             keyboardType: TextInputType.emailAddress,
-            decoration: TextFieldDecoration().decoration(labelText: "Email"),
+            decoration:
+                TextFieldDecoration().decoration(labelText: AppStrings.email),
           ),
           const SizedBox(
             height: 20,
@@ -67,7 +69,7 @@ class LoginScreen extends StatelessWidget {
             },
             keyboardAppearance: Brightness.dark,
             decoration: TextFieldDecoration().decoration(
-                labelText: "Password",
+                labelText: AppStrings.password,
                 suffixIcon: IconButton(
                     onPressed: () {}, icon: const Icon(Icons.visibility_off))),
           ),
@@ -97,18 +99,19 @@ class LoginScreen extends StatelessWidget {
           TextSpan(
               recognizer: TapGestureRecognizer()
                 ..onTap = () => AppNavigation.push(
-                    context: context, screen: const SignUpScreen()),
+                    context: context, screen: SignUpScreen()),
               text: AppStrings.register,
               style: Fonts().inter(size: 18, color: primaryColor))
         ]));
   }
 
-  Widget _loginButton() {
+  Widget _loginButton(BuildContext context) {
     return AppButtons().primaryButton(
         text: AppStrings.login,
         color: secondaryColor,
         onTap: () {
           if (_formKey.currentState!.validate()) {
+            AppNavigation.pushAndRemove(context: context, screen: TabsScreen());
             print("valid");
           } else {
             print("inValid");
@@ -127,7 +130,7 @@ class LoginScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(appPadding),
-            child: Container(
+            child: SizedBox(
               width: width,
               height: height,
               child: Column(
@@ -136,7 +139,7 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   _upperText(),
                   _loginFields(),
-                  _loginButton(),
+                  _loginButton(context),
                   _goToSignUp(context)
                 ],
               ),

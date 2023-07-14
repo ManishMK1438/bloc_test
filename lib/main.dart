@@ -1,12 +1,11 @@
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_blocs.dart';
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_states.dart';
+import 'package:bloc_test/screens/dashboard_screens/tabs_screen.dart';
 import 'package:bloc_test/screens/no_internet_screen/no_internet_screen.dart';
 import 'package:bloc_test/utils/colors.dart';
 import 'package:bloc_test/utils/navigation_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'screens/splash_screen/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +34,7 @@ class MyApp extends StatelessWidget {
             if (state is InternetLostState) {
               AppNavigation.push(context: context, screen: NoInternetScreen());
             } else {
-              AppNavigation.push(context: context, screen: SplashScreen());
+              AppNavigation.push(context: context, screen: TabsScreen());
             }
             /* switch (state.runtimeType) {
               case InternetGainedState:
@@ -46,7 +45,7 @@ class MyApp extends StatelessWidget {
                 return SplashScreen();
             }*/
           },
-          child: const MyHomePage(title: "title"),
+          child: MyHomePage(title: "title"),
         ),
       ),
     );
