@@ -34,4 +34,6 @@ class AppStrings {
   static const like = "Like";
   static const comment = "Comment";
   static const save = "Save";
+  static const stories = "Stories";
+  static const messages = "Messages";
 }

@@ -1,3 +1,4 @@
+import 'package:bloc_test/app_blocs/screen_blocs/tabs_bloc/tabs_bloc.dart';
 import 'package:bloc_test/app_widgets/buttons/buttons.dart';
 import 'package:bloc_test/screens/sign_in_screens/sign_up_screen/sign_up_screen.dart';
 import 'package:bloc_test/utils/constants.dart';
@@ -7,7 +8,9 @@ import 'package:bloc_test/utils/navigation_file.dart';
 import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../app_blocs/screen_blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../../../utils/colors.dart';
 import '../../dashboard_screens/tabs_screen.dart';
 
@@ -99,7 +102,7 @@ class LoginScreen extends StatelessWidget {
           TextSpan(
               recognizer: TapGestureRecognizer()
                 ..onTap = () => AppNavigation.push(
-                    context: context, screen: SignUpScreen()),
+                    context: context, screen: BlocProvider(child: SignUpScreen(), create:(context) => SignUpBloc(),)),
               text: AppStrings.register,
               style: Fonts().inter(size: 18, color: primaryColor))
         ]));
@@ -111,7 +114,12 @@ class LoginScreen extends StatelessWidget {
         color: secondaryColor,
         onTap: () {
           if (_formKey.currentState!.validate()) {
-            AppNavigation.pushAndRemove(context: context, screen: TabsScreen());
+            AppNavigation.pushAndRemove(
+                context: context,
+                screen: BlocProvider(
+                  create: (context) => TabsBloc(),
+                  child: TabsScreen(),
+                ));
             print("valid");
           } else {
             print("inValid");
