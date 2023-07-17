@@ -36,4 +36,6 @@ class AppStrings {
   static const save = "Save";
   static const stories = "Stories";
   static const messages = "Messages";
+  static const loggedInSuccessfully = "Logged In Successfully!";
+  static const signedUpSuccessfully = "Signed up Successfully!";
 }

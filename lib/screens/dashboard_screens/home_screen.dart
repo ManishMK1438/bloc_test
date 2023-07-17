@@ -1,6 +1,7 @@
 import 'package:bloc_test/screens/screen_widgets/post_widget.dart';
 import 'package:bloc_test/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 import '../../utils/fonts.dart';
@@ -42,7 +43,11 @@ class HomeScreen extends StatelessWidget {
                 actions: [
                   IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.add),
+                    icon: const FaIcon(FontAwesomeIcons.plus),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white.withOpacity(0.4)),
+                    ),
                     color: Colors.white,
                   )
                 ],

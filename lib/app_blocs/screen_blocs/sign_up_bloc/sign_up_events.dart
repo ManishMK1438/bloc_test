@@ -14,11 +14,6 @@ class SignUpFieldsEnteredEvent extends SignUpEvent {
       required this.confirmPassword});
 }
 
-class SignUpViewPasswordEvent extends SignUpEvent {
-  bool isVisible = false;
-  SignUpViewPasswordEvent({required this.isVisible});
-}
-
 class SignUpBtnPressedEvent extends SignUpEvent {
   final String name;
   final String email;
