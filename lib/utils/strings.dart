@@ -39,3 +39,8 @@ class AppStrings {
   static const loggedInSuccessfully = "Logged In Successfully!";
   static const signedUpSuccessfully = "Signed up Successfully!";
 }
+
+class AppStr {
+  static const userHiveBox = "UserHive";
+  static const collectionUsers = "Users";
+}

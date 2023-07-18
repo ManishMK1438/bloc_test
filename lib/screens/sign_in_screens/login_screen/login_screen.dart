@@ -1,5 +1,9 @@
+import 'package:bloc_test/app_blocs/screen_blocs/login_bloc/login_bloc.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/login_bloc/login_events.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/login_bloc/login_states.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/tabs_bloc/tabs_bloc.dart';
 import 'package:bloc_test/app_widgets/buttons/buttons.dart';
+import 'package:bloc_test/app_widgets/loader/app_loader.dart';
 import 'package:bloc_test/screens/sign_in_screens/sign_up_screen/sign_up_screen.dart';
 import 'package:bloc_test/utils/constants.dart';
 import 'package:bloc_test/utils/decorations/text_field_decoration.dart';
@@ -9,17 +13,35 @@ import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../app_blocs/screen_blocs/sign_up_bloc/sign_up_bloc.dart';
+import '../../../app_widgets/snackbars/app_snackbars.dart';
 import '../../../utils/colors.dart';
 import '../../dashboard_screens/tabs_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _obscure = true;
+
+  _addDataToBloc(BuildContext context) {
+    BlocProvider.of<LoginBloc>(context).add(LoginFieldsEnteredEvent(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    ));
+  }
 
   Widget _upperText() {
     return Column(
@@ -45,6 +67,9 @@ class LoginScreen extends StatelessWidget {
         children: [
           TextFormField(
             controller: _emailController,
+            onChanged: (val) {
+              _addDataToBloc(context);
+            },
             validator: (val) {
               if (_emailController.text.trim().isEmpty ||
                   !_emailController.text.trim().contains("@")) {
@@ -62,7 +87,10 @@ class LoginScreen extends StatelessWidget {
           ),
           TextFormField(
             controller: _passwordController,
-            obscureText: true,
+            obscureText: _obscure,
+            onChanged: (val) {
+              _addDataToBloc(context);
+            },
             validator: (val) {
               if (_passwordController.text.trim().isEmpty) {
                 return AppStrings.enterValidPassword;
@@ -74,7 +102,14 @@ class LoginScreen extends StatelessWidget {
             decoration: TextFieldDecoration().decoration(
                 labelText: AppStrings.password,
                 suffixIcon: IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.visibility_off))),
+                    onPressed: () {
+                      setState(() {
+                        _obscure = !_obscure;
+                      });
+                    },
+                    icon: _obscure
+                        ? const FaIcon(FontAwesomeIcons.eyeSlash)
+                        : const FaIcon(FontAwesomeIcons.eye))),
           ),
           const SizedBox(
             height: 10,
@@ -102,29 +137,48 @@ class LoginScreen extends StatelessWidget {
           TextSpan(
               recognizer: TapGestureRecognizer()
                 ..onTap = () => AppNavigation.push(
-                    context: context, screen: BlocProvider(child: SignUpScreen(), create:(context) => SignUpBloc(),)),
+                    context: context,
+                    screen: BlocProvider(
+                      child: SignUpScreen(),
+                      create: (context) => SignUpBloc(),
+                    )),
               text: AppStrings.register,
               style: Fonts().inter(size: 18, color: primaryColor))
         ]));
   }
 
   Widget _loginButton(BuildContext context) {
-    return AppButtons().primaryButton(
-        text: AppStrings.login,
-        color: secondaryColor,
-        onTap: () {
-          if (_formKey.currentState!.validate()) {
-            AppNavigation.pushAndRemove(
-                context: context,
-                screen: BlocProvider(
-                  create: (context) => TabsBloc(),
-                  child: TabsScreen(),
-                ));
-            print("valid");
-          } else {
-            print("inValid");
-          }
-        });
+    return BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
+      if (state is LoginSuccessState) {
+        AppNavigation.pushAndRemove(
+            context: context,
+            screen: BlocProvider(
+              create: (context) => TabsBloc(),
+              child: TabsScreen(),
+            ));
+        CustomSnackBar()
+            .customSuccessSnackBar(context, AppStrings.loggedInSuccessfully);
+      } else if (state is LoginErrorState) {
+        CustomSnackBar().customErrorSnackBar(context, state.error);
+      }
+    }, builder: (context, state) {
+      if (state is LoginInitialState) {
+        return AppButtons()
+            .primaryButton(text: AppStrings.login, color: secondaryColor);
+      } else if (state is LoginLoadingState) {
+        return const ButtonLoader();
+      }
+      return AppButtons().primaryButton(
+          text: AppStrings.login,
+          color: secondaryColor,
+          onTap: () {
+            if (_formKey.currentState!.validate()) {
+              BlocProvider.of<LoginBloc>(context).add(LoginBtnPressedEvent(
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text.trim()));
+            } else {}
+          });
+    });
   }
 
   @override

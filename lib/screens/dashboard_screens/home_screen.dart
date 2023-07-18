@@ -1,6 +1,11 @@
+import 'package:bloc_test/app_blocs/screen_blocs/login_bloc/login_bloc.dart';
 import 'package:bloc_test/screens/screen_widgets/post_widget.dart';
+import 'package:bloc_test/screens/sign_in_screens/login_screen/login_screen.dart';
 import 'package:bloc_test/utils/constants.dart';
+import 'package:bloc_test/utils/navigation_file.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
@@ -42,7 +47,18 @@ class HomeScreen extends StatelessWidget {
                 ),
                 actions: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut().then((value) {
+                        AppNavigation.pushAndRemove(
+                            context: context,
+                            screen: BlocProvider(
+                              create: (context) => LoginBloc(),
+                              child: LoginScreen(),
+                            ));
+                      }).catchError((error) {
+                        print(error.toString());
+                      });
+                    },
                     icon: const FaIcon(FontAwesomeIcons.plus),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(

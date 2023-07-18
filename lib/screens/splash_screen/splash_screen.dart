@@ -1,9 +1,11 @@
+import 'package:bloc_test/app_blocs/screen_blocs/login_bloc/login_bloc.dart';
 import 'package:bloc_test/screens/sign_in_screens/login_screen/login_screen.dart';
 import 'package:bloc_test/utils/colors.dart';
 import 'package:bloc_test/utils/fonts.dart';
 import 'package:bloc_test/utils/navigation_file.dart';
 import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/constants.dart';
 
@@ -26,7 +28,12 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigate() {
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        AppNavigation.pushReplacement(context: context, screen: LoginScreen());
+        AppNavigation.pushReplacement(
+            context: context,
+            screen: BlocProvider(
+              create: (context) => LoginBloc(),
+              child: LoginScreen(),
+            ));
       }
     });
   }
