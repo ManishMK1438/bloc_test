@@ -6,3 +6,4 @@ const buttonVerticalPadding = 10.0;
 const appLoaderSize = 60.0;
 const defaultButtonLoaderSize = 30.0;
 const sliverExpandedHeight = 150.0;
+const defaultRadius = 24.0;

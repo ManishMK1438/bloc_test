@@ -3,6 +3,9 @@ class AppImages {
   static const splashBG = "assets/images/splash_bg.png";
   static const appLogo = "assets/images/logo.png";
   static const morning = "assets/images/morning.jpg";
+  static const afternoon = "assets/images/afternoon.jpg";
+  static const evening = "assets/images/evening.jpg";
+  static const night = "assets/images/night.jpg";
 }
 
 class AppStrings {
@@ -31,6 +34,7 @@ class AppStrings {
   static const goodMorning = "Good Morning";
   static const goodAfternoon = "Good Afternoon";
   static const goodEvening = "Good Evening";
+  static const sleepWell = "Sleep Well";
   static const like = "Like";
   static const comment = "Comment";
   static const save = "Save";
@@ -38,6 +42,10 @@ class AppStrings {
   static const messages = "Messages";
   static const loggedInSuccessfully = "Logged In Successfully!";
   static const signedUpSuccessfully = "Signed up Successfully!";
+  static const user = "User";
+  static const post = "Post";
+  static const shorts = "Shorts";
+  static const addPost = "Add Post";
 }
 
 class AppStr {
