@@ -1,3 +1,5 @@
+import 'package:bloc_test/app_blocs/screen_blocs/content_blocs/post_screen_bloc/post_bloc.dart';
+import 'package:bloc_test/app_widgets/app_bar.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
 import 'package:bloc_test/screens/add_content_screens/add_post_screen.dart';
 import 'package:bloc_test/screens/add_content_screens/add_shorts_screen.dart';
@@ -5,6 +7,7 @@ import 'package:bloc_test/screens/screen_widgets/post_widget.dart';
 import 'package:bloc_test/utils/constants.dart';
 import 'package:bloc_test/utils/navigation_file.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
@@ -85,7 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     onTap: () {
                       AppNavigation.push(
-                          context: context, screen: AddPostScreen());
+                          context: context,
+                          screen: BlocProvider(
+                            create: (context) => PostBloc(),
+                            child: AddPostScreen(),
+                          ));
                     },
                     leading: const FaIcon(FontAwesomeIcons.photoFilm),
                     title: Text(
@@ -124,15 +131,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, snapShot) {
                     //print(snapShot.data);
                     // if (snapShot.hasData) {
-                    return SliverAppBar(
-                      automaticallyImplyLeading: false,
+                    return CustomSliverAppBar(
+                      implyLeading: false,
                       expandedHeight: sliverExpandedHeight,
                       floating: true,
                       backgroundColor: Colors.black,
                       shadowColor: Colors.transparent,
                       pinned: true,
                       elevation: 0,
-                      flexibleSpace: FlexibleSpaceBar(
+                      flexibleWidget: FlexibleSpaceBar(
                         titlePadding:
                             const EdgeInsets.only(left: 15, bottom: 10),
                         title: FittedBox(

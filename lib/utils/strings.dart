@@ -46,9 +46,16 @@ class AppStrings {
   static const post = "Post";
   static const shorts = "Shorts";
   static const addPost = "Add Post";
+  static const selectImage = "Select Image";
+  static const selectImageToPost = "Select an image to post";
+  static const createPost = "Create Post";
+  static const postDesc = "Post Description";
+  static const postedSuccessfully = "Posted Successfully";
 }
 
 class AppStr {
   static const userHiveBox = "UserHive";
   static const collectionUsers = "Users";
+  static const postImages = "PostImages";
+  static const userPosts = "UserPosts";
 }

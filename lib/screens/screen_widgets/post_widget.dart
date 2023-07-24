@@ -1,3 +1,4 @@
+import 'package:bloc_test/utils/fonts.dart';
 import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,17 +23,29 @@ class PostWidget extends StatelessWidget {
   }
 
   Widget _postMedia() {
-    return AspectRatio(
-      aspectRatio: 1.5,
-      child: Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-        child: Image.asset(
-          "assets/images/morning.jpg",
-          fit: BoxFit.fill,
-          errorBuilder: (c, v, b) => const Icon(Icons.error),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "asdncsadknbcksd ckb diskac io cbcb idb cib asdc sdac d dv ",
+          style: Fonts().inter(size: 18),
         ),
-      ),
+        const SizedBox(
+          height: 20,
+        ),
+        AspectRatio(
+          aspectRatio: 1.5,
+          child: Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+            child: Image.asset(
+              "assets/images/morning.jpg",
+              fit: BoxFit.fill,
+              errorBuilder: (c, v, b) => const Icon(Icons.error),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
