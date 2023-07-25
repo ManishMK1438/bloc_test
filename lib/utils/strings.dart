@@ -6,6 +6,7 @@ class AppImages {
   static const afternoon = "assets/images/afternoon.jpg";
   static const evening = "assets/images/evening.jpg";
   static const night = "assets/images/night.jpg";
+  static const error = "assets/gif/error.gif";
 }
 
 class AppStrings {
@@ -51,6 +52,10 @@ class AppStrings {
   static const createPost = "Create Post";
   static const postDesc = "Post Description";
   static const postedSuccessfully = "Posted Successfully";
+  static const minAgo = "min ago";
+  static const hrAgo = "hr ago";
+  static const dayAgo = "day ago";
+  static const daysAgo = "days ago";
 }
 
 class AppStr {

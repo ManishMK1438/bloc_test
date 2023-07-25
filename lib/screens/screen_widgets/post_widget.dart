@@ -1,24 +1,34 @@
+import 'package:bloc_test/app_functions/app_functions.dart';
+import 'package:bloc_test/app_widgets/network_image.dart';
+import 'package:bloc_test/models/post_model/post_model.dart';
 import 'package:bloc_test/utils/fonts.dart';
 import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostWidget extends StatelessWidget {
-  const PostWidget({super.key});
+  final PostModel model;
+  const PostWidget({super.key, required this.model});
 
   Widget _postTile() {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
         radius: 24,
-        backgroundColor: Colors.black38,
+        child: AppNetworkImage(url: model.user!.profilePic ?? ""),
       ),
-      title: Text("data"),
-      subtitle: Text("data"),
-      trailing: PopupMenuButton(
+      title: Text(
+        model.user!.name ?? AppStrings.user,
+        style: Fonts().inter(size: 16),
+      ),
+      subtitle: Text(
+        AppFunctions().timeAgo(dateTime: model.postedOn!),
+        style: Fonts().inter(size: 14),
+      ),
+      /* trailing: PopupMenuButton(
           itemBuilder: (ctx) => [
                 PopupMenuItem(child: Text("data")),
-              ]),
+              ]),*/
     );
   }
 
@@ -27,7 +37,7 @@ class PostWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "asdncsadknbcksd ckb diskac io cbcb idb cib asdc sdac d dv ",
+          model.desc ?? "",
           style: Fonts().inter(size: 18),
         ),
         const SizedBox(
@@ -38,11 +48,7 @@ class PostWidget extends StatelessWidget {
           child: Container(
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-            child: Image.asset(
-              "assets/images/morning.jpg",
-              fit: BoxFit.fill,
-              errorBuilder: (c, v, b) => const Icon(Icons.error),
-            ),
+            child: AppNetworkImage(url: model.image ?? ""),
           ),
         ),
       ],

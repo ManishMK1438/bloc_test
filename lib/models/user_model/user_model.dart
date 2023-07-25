@@ -38,4 +38,14 @@ class UserModel extends HiveObject {
     profilePic = map["profilePic"];
     gender = map["gender"];
   }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['phoneNumber'] = this.phoneNumber;
+    data['profilePic'] = this.profilePic;
+    data['gender'] = this.gender;
+    data['name'] = this.name;
+    data['id'] = this.id;
+    data['email'] = this.email;
+    return data;
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_blocs.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
 import 'package:bloc_test/models/user_model/user_model.dart';
 import 'package:bloc_test/screens/dashboard_screens/tabs_screen.dart';
@@ -40,8 +41,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => InternetBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => InternetBloc()),
+        BlocProvider(create: (context) => HomeBloc()),
+      ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',

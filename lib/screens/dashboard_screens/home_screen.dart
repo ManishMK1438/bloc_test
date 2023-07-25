@@ -1,5 +1,9 @@
 import 'package:bloc_test/app_blocs/screen_blocs/content_blocs/post_screen_bloc/post_bloc.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
 import 'package:bloc_test/app_widgets/app_bar.dart';
+import 'package:bloc_test/app_widgets/error_widgets/app_error_widgets.dart';
+import 'package:bloc_test/app_widgets/loader/app_loader.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
 import 'package:bloc_test/screens/add_content_screens/add_post_screen.dart';
 import 'package:bloc_test/screens/add_content_screens/add_shorts_screen.dart';
@@ -24,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime current = DateTime.now();
+  final _homeBloc = HomeBloc();
 
   late Stream<DateTime> timer;
   late final Box<dynamic> _userBox;
@@ -188,19 +193,35 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           body: Padding(
             padding: const EdgeInsets.only(left: appPadding, right: appPadding),
-            child: LazyLoadScrollView(
-              onEndOfPage: () {},
-              isLoading: false,
-              child: RefreshIndicator(
-                onRefresh: () async {},
-                child: ListView.separated(
-                  separatorBuilder: (ctx, ind) => const Divider(),
-                  //shrinkWrap: true,
-                  itemBuilder: (ctx, index) => const PostWidget(),
-                  itemCount: 20,
-                ),
-              ),
-            ),
+            child: BlocConsumer<HomeBloc, HomeState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is LoadingHomeState) {
+                    return const AppLoader();
+                  } else if (state is ErrorHomeState) {
+                    return AppErrorWidget(error: state.error);
+                  } else if (state is ValidHomeState) {
+                    return LazyLoadScrollView(
+                      onEndOfPage: () {},
+                      isLoading: false,
+                      child: RefreshIndicator(
+                        onRefresh: () async {},
+                        child: ListView.separated(
+                          separatorBuilder: (ctx, ind) => const Divider(),
+                          //shrinkWrap: true,
+                          itemBuilder: (ctx, index) {
+                            var post = state.modelList[index];
+                            return PostWidget(
+                              model: post,
+                            );
+                          },
+                          itemCount: state.modelList.length,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
           ),
         ),
       ),

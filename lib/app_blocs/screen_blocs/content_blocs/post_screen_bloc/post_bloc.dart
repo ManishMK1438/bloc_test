@@ -41,17 +41,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       await _ref.putFile(event.img!);
       final _url = await _ref.getDownloadURL();
 
+      String postId = _uuid.v4();
       Map<String, dynamic> map = {
-        "postId": _uuid.v4(),
+        "postId": postId,
         "userId": userId,
         "image": _url,
         "desc": event.postDesc,
         "likes": null,
         "comments": null,
         "saved": false,
-        "likedByMe": false
+        "likedByMe": false,
+        "postedOn": DateTime.now().toString(),
       };
-      await _fireStore.collection(AppStr.userPosts).doc(userId).set(map);
+      await _fireStore.collection(AppStr.userPosts).doc(postId).set(map);
       emit(PostSuccessState());
     } on FirebaseException catch (e) {
       emit(PostErrorState(error: e.message.toString()));
