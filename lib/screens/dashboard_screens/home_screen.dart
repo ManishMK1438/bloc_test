@@ -16,6 +16,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
+import '../../app_blocs/screen_blocs/home_bloc/home_events.dart';
 import '../../utils/fonts.dart';
 import '../../utils/strings.dart';
 
@@ -28,7 +29,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime current = DateTime.now();
-  final _homeBloc = HomeBloc();
 
   late Stream<DateTime> timer;
   late final Box<dynamic> _userBox;
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     onTap: () {
                       AppNavigation.push(
-                          context: context, screen: AddShortsScreen());
+                          context: context, screen: const AddShortsScreen());
                     },
                     leading: const FaIcon(FontAwesomeIcons.fileVideo),
                     title: Text(
@@ -194,34 +194,55 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Padding(
             padding: const EdgeInsets.only(left: appPadding, right: appPadding),
             child: BlocConsumer<HomeBloc, HomeState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is LoadingHomeState) {
-                    return const AppLoader();
-                  } else if (state is ErrorHomeState) {
-                    return AppErrorWidget(error: state.error);
-                  } else if (state is ValidHomeState) {
-                    return LazyLoadScrollView(
-                      onEndOfPage: () {},
-                      isLoading: false,
-                      child: RefreshIndicator(
-                        onRefresh: () async {},
-                        child: ListView.separated(
-                          separatorBuilder: (ctx, ind) => const Divider(),
-                          //shrinkWrap: true,
-                          itemBuilder: (ctx, index) {
-                            var post = state.modelList[index];
-                            return PostWidget(
-                              model: post,
+                /*listenWhen: (old, current) => current is! ValidHomeState,
+                buildWhen: (old, current) => current is ValidHomeState,*/
+                listener: (context, state) {
+              if (state is ErrorHomeState) {
+                //CustomSnackBar().customErrorSnackBar(context, state.error);
+              }
+            }, builder: (context, state) {
+              print(state.runtimeType);
+              if (state is LoadingHomeState) {
+                return const AppLoader();
+              } else if (state is ErrorHomeState) {
+                return AppErrorWidget(error: state.error);
+              } else if (state is ValidHomeState) {
+                return LazyLoadScrollView(
+                  onEndOfPage: () {
+                    BlocProvider.of<HomeBloc>(context).add(LoadMoreHomeEvent());
+                  },
+                  isLoading: false,
+                  child: RefreshIndicator(
+                    onRefresh: () async {},
+                    child: ListView.separated(
+                      separatorBuilder: (ctx, ind) => const Divider(),
+                      itemBuilder: (ctx, index) {
+                        // print(index);
+                        if (index < state.modelList.length) {
+                          var post = state.modelList[index];
+                          return PostWidget(
+                            model: post,
+                          );
+                        } else {
+                          if (state.status == PostStatus.loading) {
+                            return const Center(child: ScrollLoader());
+                          } else if (state.status == PostStatus.failure) {
+                            return Text(
+                              AppStrings.scrollEnd,
+                              textAlign: TextAlign.center,
+                              style: Fonts().inter(size: 14),
                             );
-                          },
-                          itemCount: state.modelList.length,
-                        ),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                }),
+                          }
+                          return const SizedBox.shrink();
+                        }
+                      },
+                      itemCount: state.modelList.length + 1,
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
           ),
         ),
       ),

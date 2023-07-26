@@ -1,9 +1,27 @@
-abstract class HomeEvent {}
+import 'package:equatable/equatable.dart';
 
-class LoadInitialDataHomeState extends HomeEvent {}
+abstract class HomeEvent extends Equatable {}
 
-class LoadMoreHomeEvent extends HomeEvent {}
+class LoadInitialDataHomeState extends HomeEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 
-class LikedHomeEvent extends HomeEvent {}
+class LoadMoreHomeEvent extends HomeEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 
-class SavedHomeEvent extends HomeEvent {}
+class LikedHomeEvent extends HomeEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class SavedHomeEvent extends HomeEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}

@@ -1,7 +1,6 @@
-import 'package:bloc_test/utils/colors.dart';
+import 'package:bloc_test/app_widgets/loader/app_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppNetworkImage extends StatelessWidget {
@@ -16,9 +15,7 @@ class AppNetworkImage extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: url,
       fit: fit ?? BoxFit.fill,
-      placeholder: (context, url) => const SpinKitFadingCircle(
-        color: secondaryColor,
-      ),
+      placeholder: (context, url) => const ImageLoader(),
       errorWidget: (context, url, error) =>
           errorWidget ?? const FaIcon(FontAwesomeIcons.userTie),
     );

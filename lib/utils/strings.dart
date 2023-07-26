@@ -56,6 +56,7 @@ class AppStrings {
   static const hrAgo = "hr ago";
   static const dayAgo = "day ago";
   static const daysAgo = "days ago";
+  static const scrollEnd = "You've reached the end!";
 }
 
 class AppStr {

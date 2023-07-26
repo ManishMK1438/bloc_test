@@ -7,3 +7,6 @@ const appLoaderSize = 60.0;
 const defaultButtonLoaderSize = 30.0;
 const sliverExpandedHeight = 150.0;
 const defaultRadius = 24.0;
+const postLimit = 5;
+const scrollLoaderSize = 18.0;
+const imageLoaderSize = 40.0;

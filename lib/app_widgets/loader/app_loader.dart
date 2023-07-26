@@ -33,3 +33,29 @@ class ButtonLoader extends StatelessWidget {
     );
   }
 }
+
+class ScrollLoader extends StatelessWidget {
+  final double? size;
+  const ScrollLoader({super.key, this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return SpinKitThreeBounce(
+      color: secondaryColor,
+      size: size ?? scrollLoaderSize,
+    );
+  }
+}
+
+class ImageLoader extends StatelessWidget {
+  final double? size;
+  const ImageLoader({super.key, this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return SpinKitFadingCircle(
+      size: size ?? imageLoaderSize,
+      color: secondaryColor,
+    );
+  }
+}

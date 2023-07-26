@@ -47,6 +47,7 @@ dependencies:
   font_awesome_flutter: 10.4.0
   path_provider: ^2.0.15
   uuid: ^3.0.7
+  equatable: ^2.0.5
 
   # Firebase
   firebase_core: ^2.14.0
