@@ -222,6 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           var post = state.modelList[index];
                           return PostWidget(
                             model: post,
+                            index: index,
                           );
                         } else {
                           if (state.status == PostStatus.loading) {

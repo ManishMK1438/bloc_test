@@ -1,14 +1,18 @@
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_events.dart';
 import 'package:bloc_test/app_functions/app_functions.dart';
 import 'package:bloc_test/app_widgets/network_image.dart';
 import 'package:bloc_test/models/post_model/post_model.dart';
 import 'package:bloc_test/utils/fonts.dart';
 import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostWidget extends StatelessWidget {
   final PostModel model;
-  const PostWidget({super.key, required this.model});
+  final int index;
+  const PostWidget({super.key, required this.model, required this.index});
 
   Widget _postTile() {
     return ListTile(
@@ -55,16 +59,21 @@ class PostWidget extends StatelessWidget {
     );
   }
 
-  Widget _postInteractions() {
+  Widget _postInteractions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Tooltip(
           message: AppStrings.like,
           child: TextButton.icon(
-              onPressed: () {},
-              icon: const FaIcon(FontAwesomeIcons.thumbsUp),
-              label: const Text(AppStrings.like)),
+              onPressed: () {
+                BlocProvider.of<HomeBloc>(context)
+                    .add(LikedHomeEvent(post: model, index: index));
+              },
+              icon: model.likedByMe!
+                  ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
+                  : const FaIcon(FontAwesomeIcons.thumbsUp),
+              label: Text("${model.likes ?? 0} ${AppStrings.like}")),
         ),
         Tooltip(
           message: AppStrings.comment,
@@ -77,8 +86,12 @@ class PostWidget extends StatelessWidget {
           message: AppStrings.save,
           child: TextButton.icon(
               onPressed: () {},
-              icon: const FaIcon(FontAwesomeIcons.bookmark),
-              label: const Text(AppStrings.save)),
+              icon: model.saved!
+                  ? const FaIcon(FontAwesomeIcons.solidBookmark)
+                  : const FaIcon(FontAwesomeIcons.bookmark),
+              label: model.saved!
+                  ? const Text(AppStrings.saved)
+                  : const Text(AppStrings.save)),
         ),
       ],
     );
@@ -97,7 +110,7 @@ class PostWidget extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          _postInteractions()
+          _postInteractions(context)
         ],
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../user_model/user_model.dart';
 
 class PostModel {
@@ -23,6 +25,28 @@ class PostModel {
       this.desc,
       this.likes,
       this.user});
+
+  int? updateLikes() {
+    return likes = likes! + 1;
+  }
+
+  int? removeLikes() {
+    if (likes != null) {
+      likes = max(0, likes! - 1);
+    } else {
+      likes = null;
+    }
+    return likes;
+  }
+
+  bool liked(bool isLiked) {
+    isLiked = !isLiked;
+    return isLiked;
+  }
+
+  bool isSaved(bool isSaved) {
+    return isSaved = !isSaved;
+  }
 
   PostModel.fromJson(Map<String, dynamic> json) {
     image = json['image'];
