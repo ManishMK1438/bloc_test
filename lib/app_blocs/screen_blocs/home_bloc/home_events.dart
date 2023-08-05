@@ -11,12 +11,6 @@ class LoadInitialDataHomeEvent extends HomeEvent {
   List<Object?> get props => [refresh];
 }
 
-class LoadMoreHomeEvent extends HomeEvent {
-  @override
-  // TODO: implement props
-  List<Object?> get props => [];
-}
-
 class LikedHomeEvent extends HomeEvent {
   final PostModel post;
   final int index;

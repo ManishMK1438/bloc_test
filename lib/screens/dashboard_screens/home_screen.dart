@@ -193,41 +193,56 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           body: Padding(
             padding: const EdgeInsets.only(left: appPadding, right: appPadding),
-            child: BlocConsumer<HomeBloc, HomeState>(
-                /*listenWhen: (old, current) => current is! ValidHomeState,
-                buildWhen: (old, current) => current is ValidHomeState,*/
+            child: BlocConsumer<HomeBloc, ValidHomeState>(
+                /*listenWhen: (old, current) => current is! ValidHomeState,*/
+                // buildWhen: (old, current) => current.status == PostStatus.success,
                 listener: (context, state) {
-              if (state is ErrorHomeState) {
-                //CustomSnackBar().customErrorSnackBar(context, state.error);
-              }
+              //if (state is ErrorHomeState) {
+              //CustomSnackBar().customErrorSnackBar(context, state.error);
+              //}
             }, builder: (context, state) {
-              print(state.runtimeType);
-              if (state is LoadingHomeState) {
+              // print(state.toString());
+              if (state.status == PostStatus.loading) {
                 return const AppLoader();
-              } else if (state is ErrorHomeState) {
+              } else if (state.status == PostStatus.failure) {
                 return AppErrorWidget(error: state.error);
-              } else if (state is ValidHomeState) {
+              } else if (state.status == PostStatus.success) {
                 return LazyLoadScrollView(
                   onEndOfPage: () {
-                    BlocProvider.of<HomeBloc>(context).add(LoadMoreHomeEvent());
+                    BlocProvider.of<HomeBloc>(context)
+                        .add(LoadInitialDataHomeEvent(refresh: false));
                   },
                   isLoading: false,
                   child: RefreshIndicator(
-                    onRefresh: () async {},
+                    onRefresh: () async {
+                      BlocProvider.of<HomeBloc>(context)
+                          .add(LoadInitialDataHomeEvent(refresh: true));
+                    },
                     child: ListView.separated(
                       separatorBuilder: (ctx, ind) => const Divider(),
                       itemBuilder: (ctx, index) {
-                        // print(index);
-                        if (index < state.modelList.length) {
-                          var post = state.modelList[index];
+                        // print("index $index");
+                        //  print("length ${state.status}");
+                        if (index < state.posts.length) {
+                          var post = state.posts[index];
                           return PostWidget(
                             model: post,
                             index: index,
                           );
+                        } else if (state.hasReachedMax) {
+                          return Text(
+                            AppStrings.scrollEnd,
+                            textAlign: TextAlign.center,
+                            style: Fonts().inter(size: 14),
+                          );
                         } else {
-                          if (state.status == PostStatus.loading) {
-                            return const Center(child: ScrollLoader());
-                          } else if (state.status == PostStatus.failure) {
+                          return const Center(child: ScrollLoader());
+                        }
+
+                        /*else {
+                          if (state.hasReachedMax == false) {
+
+                          } else if (state.hasReachedMax) {
                             return Text(
                               AppStrings.scrollEnd,
                               textAlign: TextAlign.center,
@@ -235,9 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                           return const SizedBox.shrink();
-                        }
+                        }*/
                       },
-                      itemCount: state.modelList.length + 1,
+                      itemCount: state.posts.toSet().toList().length + 1,
                     ),
                   ),
                 );

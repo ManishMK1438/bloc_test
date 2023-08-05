@@ -1,3 +1,4 @@
+import 'package:bloc_test/app_blocs/bloc_observer.dart';
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_blocs.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
@@ -20,6 +21,7 @@ void main() async {
   await HiveClass().init();
   Hive.registerAdapter(UserModelAdapter());
   await HiveClass().openBox(boxName: AppStr.userHiveBox);
+  Bloc.observer = GlobalObserver();
   runApp(const MyApp());
 }
 

@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 part 'user_model.g.dart';
 
 @HiveType(typeId: 0)
-class UserModel extends HiveObject {
+class UserModel extends HiveObject with EquatableMixin {
   @HiveField(0)
   String? id;
 
@@ -48,4 +49,8 @@ class UserModel extends HiveObject {
     data['email'] = this.email;
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [phoneNumber, profilePic, gender, name, id, email];
 }

@@ -8,17 +8,16 @@ import 'package:bloc_test/utils/strings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
+class HomeBloc extends Bloc<HomeEvent, ValidHomeState> {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   final User? _currentUser = FirebaseAuth.instance.currentUser;
   final _functions = AppFunctions();
   List<PostModel> _modelList = [];
   int querySize = 0;
   QueryDocumentSnapshot<Map<String, dynamic>>? lastVisible;
-  HomeBloc() : super(LoadingHomeState()) {
+  HomeBloc() : super(const ValidHomeState()) {
     on<LoadInitialDataHomeEvent>(
         (event, emit) => _loadInitialData(event, emit));
-    on<LoadMoreHomeEvent>((event, emit) => _loadMore(event, emit));
     on<LikedHomeEvent>((event, emit) => _liked(event, emit));
     on<SavedHomeEvent>((event, emit) => _saved(event, emit));
     //_loadInitialData();
@@ -26,69 +25,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   _loadInitialData(
-      LoadInitialDataHomeEvent event, Emitter<HomeState> emit) async {
+      LoadInitialDataHomeEvent event, Emitter<ValidHomeState> emit) async {
     try {
-      if (event.refresh) {
-        emit(LoadingHomeState());
-      }
-      //Get post details
-      _modelList.clear();
-      querySize = 0;
-      lastVisible = null;
       var userData = {};
       List<Map<String, dynamic>> post = [];
+      if (event.refresh) {
+        _modelList.clear();
+        userData.clear();
+        post.clear();
+        emit(const ValidHomeState(status: PostStatus.loading));
+      }
+
+      //collections
       var userCollection =
           await _fireStore.collection(AppStr.collectionUsers).get();
-      await _fireStore
+      var query = _fireStore
           .collection(AppStr.userPosts)
           .limit(postLimit)
-          .orderBy("postedOn", descending: true)
-          .get()
-          .then((value) {
-        querySize = value.size;
-        lastVisible = value.docs[value.size - 1];
-        for (var e in value.docs) {
-          userData = userCollection.docs
-              .firstWhere((element) => element.id == e.data()['userId'])
-              .data();
-          post.add(e.data()..addAll({"user": userData}));
-        }
-        for (var v in post) {
-          _modelList.add(PostModel.fromJson(v));
-        }
-      });
-      // print(_modelList.length);
-      emit(ValidHomeState(modelList: _modelList).copyWith(
-        status:
-            querySize >= postLimit ? PostStatus.success : PostStatus.failure,
-      ));
-    } on FirebaseException catch (e) {
-      emit(ErrorHomeState(error: e.message.toString()));
-    } catch (e) {
-      emit(ErrorHomeState(error: e.toString()));
-    }
-  }
+          .orderBy("postedOn", descending: true);
 
-  _loadMore(LoadMoreHomeEvent event, Emitter<HomeState> emit) async {
-    emit(ValidHomeState(modelList: const [])
-        .copyWith(status: PostStatus.loading, posts: _modelList));
-    try {
-      if (querySize >= postLimit) {
-        //Get post details
-        var userData = {};
-        List<Map<String, dynamic>> post = [];
-        var userCollection =
-            await _fireStore.collection(AppStr.collectionUsers).get();
-        await _fireStore
-            .collection(AppStr.userPosts)
-            .limit(postLimit)
-            .orderBy("postedOn", descending: true)
-            .startAfterDocument(lastVisible!)
-            .get()
-            .then((value) {
+      //filtering and merging
+      if (state.status == PostStatus.loading) {
+        await query.get().then((value) {
           querySize = value.size;
           lastVisible = value.docs[value.size - 1];
-          print(value.docs[value.size - 1].data());
           for (var e in value.docs) {
             userData = userCollection.docs
                 .firstWhere((element) => element.id == e.data()['userId'])
@@ -99,25 +59,52 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             _modelList.add(PostModel.fromJson(v));
           }
         });
-        print("${_modelList.length} list length");
-        emit(ValidHomeState(modelList: _modelList.toSet().toList()).copyWith(
-          status: PostStatus.success,
-        ));
+        emit(state.copyWith(
+            posts: _modelList,
+            hasReachedMax: querySize >= postLimit ? false : true,
+            status: PostStatus.success));
       } else {
-        emit(ValidHomeState(modelList: _modelList.toSet().toList()).copyWith(
-          status: PostStatus.failure,
-        ));
+        if (querySize >= postLimit) {
+          await query.startAfterDocument(lastVisible!).get().then((value) {
+            querySize = value.size;
+            lastVisible = value.docs[value.size - 1];
+            //print(value.docs[value.size - 1].data());
+            for (var e in value.docs) {
+              userData = userCollection.docs
+                  .firstWhere((element) => element.id == e.data()['userId'])
+                  .data();
+              post.add(e.data()..addAll({"user": userData}));
+            }
+            print("post length ${post.length}");
+            for (var v in post) {
+              _modelList.add(PostModel.fromJson(v));
+            }
+          });
+          // print("${List.of(state.posts).length} list length");
+          emit(state.copyWith(
+              posts: List.of(state.posts)..addAll(_modelList),
+              hasReachedMax: false,
+              status: PostStatus.success));
+          //_modelList.clear();
+          post.clear();
+        } else {
+          emit(state.copyWith(
+            posts: _modelList,
+            status: PostStatus.success,
+            hasReachedMax: true,
+          ));
+        }
       }
+      //Get post details
     } on FirebaseException catch (e) {
-      print(e.message.toString());
-      emit(ErrorHomeState(error: e.message.toString()));
+      emit(state.copyWith(
+          status: PostStatus.failure, error: e.message.toString()));
     } catch (e) {
-      print(e.toString());
-      emit(ErrorHomeState(error: e.toString()));
+      emit(state.copyWith(status: PostStatus.failure, error: e.toString()));
     }
   }
 
-  _liked(LikedHomeEvent event, Emitter<HomeState> emit) async {
+  _liked(LikedHomeEvent event, Emitter<ValidHomeState> emit) async {
     try {
       final post = event.post;
       await _fireStore.collection(AppStr.userPosts).doc(post.postId).update({
@@ -140,14 +127,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             .get();
         _modelList[event.index] = updatedPost.data()!;
       });
-      emit(ValidHomeState(modelList: _modelList.toSet().toList()).copyWith());
+      emit(ValidHomeState().copyWith());
     } on FirebaseException catch (e) {
-      emit(ErrorHomeState(error: e.message.toString()));
+      emit(const ValidHomeState().copyWith(status: PostStatus.failure));
     } catch (e, s) {
       print(s);
-      emit(ErrorHomeState(error: e.toString()));
+      emit(const ValidHomeState().copyWith(status: PostStatus.failure));
     }
   }
 
-  _saved(SavedHomeEvent event, Emitter<HomeState> emit) {}
+  _saved(SavedHomeEvent event, Emitter<ValidHomeState> emit) {}
 }

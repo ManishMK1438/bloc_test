@@ -1,39 +1,55 @@
 import 'package:bloc_test/models/post_model/post_model.dart';
 import 'package:equatable/equatable.dart';
 
-enum PostStatus { loading, success, failure }
+enum PostStatus { initial, loading, success, failure }
 
-abstract class HomeState extends Equatable {}
+//abstract class HomeState extends Equatable {}
+/*
 
 class LoadingHomeState extends HomeState {
   @override
   // TODO: implement props
   List<Object?> get props => [];
 }
+*/
 
-class ValidHomeState extends HomeState {
+class ValidHomeState extends Equatable {
+  const ValidHomeState({
+    this.status = PostStatus.loading,
+    this.posts = const <PostModel>[],
+    this.hasReachedMax = false,
+    this.error = "",
+  });
+
   final PostStatus status;
-  final List<PostModel> modelList;
+  final List<PostModel> posts;
+  final bool hasReachedMax;
+  final String error;
 
   ValidHomeState copyWith({
     PostStatus? status,
     List<PostModel>? posts,
+    String? error,
+    bool? hasReachedMax,
   }) {
     return ValidHomeState(
       status: status ?? this.status,
-      modelList: posts ?? modelList,
+      posts: posts ?? this.posts,
+      error: error ?? this.error,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
-  ValidHomeState({
-    required this.modelList,
-    this.status = PostStatus.success,
-  });
+  @override
+  String toString() {
+    return '''PostState { status: $status, hasReachedMax: $hasReachedMax, posts: ${posts.length} }''';
+  }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [modelList, status];
+  List<Object> get props => [status, posts, hasReachedMax];
 }
+/*
+
 
 class NoDataHomeState extends HomeState {
   @override
@@ -55,3 +71,4 @@ class ErrorHomeState extends HomeState {
   // TODO: implement props
   List<Object?> get props => [error];
 }
+*/

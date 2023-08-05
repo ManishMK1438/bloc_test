@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
+
 import '../user_model/user_model.dart';
 
-class PostModel {
+class PostModel extends Equatable {
   String? image;
   int? comments;
   bool? likedByMe;
@@ -77,4 +79,19 @@ class PostModel {
     }
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [
+        image,
+        comments,
+        likes,
+        likedByMe,
+        saved,
+        postId,
+        postedOn,
+        userId,
+        desc,
+        user
+      ];
 }
