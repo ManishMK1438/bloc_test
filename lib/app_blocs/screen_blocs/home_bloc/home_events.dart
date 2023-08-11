@@ -14,10 +14,11 @@ class LoadInitialDataHomeEvent extends HomeEvent {
 class LikedHomeEvent extends HomeEvent {
   final PostModel post;
   final int index;
-  LikedHomeEvent({required this.post, required this.index});
+  final bool like;
+  LikedHomeEvent({required this.post, required this.index, required this.like});
   @override
   // TODO: implement props
-  List<Object?> get props => [post, index];
+  List<Object?> get props => [post, index, like];
 }
 
 class SavedHomeEvent extends HomeEvent {

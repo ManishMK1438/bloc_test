@@ -46,7 +46,9 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => InternetBloc()),
-        BlocProvider(create: (context) => HomeBloc()),
+        BlocProvider(
+          create: (context) => HomeBloc(),
+        ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

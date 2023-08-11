@@ -1,5 +1,6 @@
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_events.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
 import 'package:bloc_test/app_functions/app_functions.dart';
 import 'package:bloc_test/app_widgets/network_image.dart';
 import 'package:bloc_test/models/post_model/post_model.dart';
@@ -60,41 +61,46 @@ class PostWidget extends StatelessWidget {
   }
 
   Widget _postInteractions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Tooltip(
-          message: AppStrings.like,
-          child: TextButton.icon(
-              onPressed: () {
-                BlocProvider.of<HomeBloc>(context)
-                    .add(LikedHomeEvent(post: model, index: index));
-              },
-              icon: model.likedByMe!
-                  ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
-                  : const FaIcon(FontAwesomeIcons.thumbsUp),
-              label: Text("${model.likes ?? 0} ${AppStrings.like}")),
-        ),
-        Tooltip(
-          message: AppStrings.comment,
-          child: TextButton.icon(
-              onPressed: () {},
-              icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
-              label: const Text(AppStrings.comment)),
-        ),
-        Tooltip(
-          message: AppStrings.save,
-          child: TextButton.icon(
-              onPressed: () {},
-              icon: model.saved!
-                  ? const FaIcon(FontAwesomeIcons.solidBookmark)
-                  : const FaIcon(FontAwesomeIcons.bookmark),
-              label: model.saved!
-                  ? const Text(AppStrings.saved)
-                  : const Text(AppStrings.save)),
-        ),
-      ],
-    );
+    return BlocConsumer<HomeBloc, ValidHomeState>(
+        listener: (ctx, state) {},
+        // buildWhen: (previous, current) => current.isLiked != previous.isLiked,
+        builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Tooltip(
+                message: AppStrings.like,
+                child: TextButton.icon(
+                    onPressed: () {
+                      BlocProvider.of<HomeBloc>(context).add(LikedHomeEvent(
+                          post: model, index: index, like: model.likedByMe!));
+                    },
+                    icon: model.likedByMe!
+                        ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
+                        : const FaIcon(FontAwesomeIcons.thumbsUp),
+                    label: Text("${model.likes ?? 0} ${AppStrings.like}")),
+              ),
+              Tooltip(
+                message: AppStrings.comment,
+                child: TextButton.icon(
+                    onPressed: () {},
+                    icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
+                    label: const Text(AppStrings.comment)),
+              ),
+              Tooltip(
+                message: AppStrings.save,
+                child: TextButton.icon(
+                    onPressed: () {},
+                    icon: model.saved!
+                        ? const FaIcon(FontAwesomeIcons.solidBookmark)
+                        : const FaIcon(FontAwesomeIcons.bookmark),
+                    label: model.saved!
+                        ? const Text(AppStrings.saved)
+                        : const Text(AppStrings.save)),
+              ),
+            ],
+          );
+        });
   }
 
   @override

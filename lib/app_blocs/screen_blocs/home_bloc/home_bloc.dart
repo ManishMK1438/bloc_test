@@ -48,25 +48,32 @@ class HomeBloc extends Bloc<HomeEvent, ValidHomeState> {
       if (state.status == PostStatus.loading) {
         await query.get().then((value) {
           querySize = value.size;
-          lastVisible = value.docs[value.size - 1];
-          for (var e in value.docs) {
-            userData = userCollection.docs
-                .firstWhere((element) => element.id == e.data()['userId'])
-                .data();
-            post.add(e.data()..addAll({"user": userData}));
-          }
-          for (var v in post) {
-            _modelList.add(PostModel.fromJson(v));
+          if (querySize == 0) {
+            emit(state.copyWith(status: PostStatus.empty, hasReachedMax: true));
+          } else {
+            lastVisible = value.docs[value.size - 1];
+            for (var e in value.docs) {
+              userData = userCollection.docs
+                  .firstWhere((element) => element.id == e.data()['userId'])
+                  .data();
+              post.add(e.data()..addAll({"user": userData}));
+            }
+            for (var v in post) {
+              _modelList.add(PostModel.fromJson(v));
+            }
+            emit(state.copyWith(
+                posts: _modelList,
+                hasReachedMax: querySize >= postLimit ? false : true,
+                status: PostStatus.success));
           }
         });
-        emit(state.copyWith(
-            posts: _modelList,
-            hasReachedMax: querySize >= postLimit ? false : true,
-            status: PostStatus.success));
       } else {
-        if (querySize >= postLimit) {
+        if (querySize == postLimit) {
+          //post.clear();
+          //_modelList.clear();
           await query.startAfterDocument(lastVisible!).get().then((value) {
             querySize = value.size;
+            print(querySize);
             lastVisible = value.docs[value.size - 1];
             //print(value.docs[value.size - 1].data());
             for (var e in value.docs) {
@@ -75,7 +82,7 @@ class HomeBloc extends Bloc<HomeEvent, ValidHomeState> {
                   .data();
               post.add(e.data()..addAll({"user": userData}));
             }
-            print("post length ${post.length}");
+            // print("post length ${post.length}");
             for (var v in post) {
               _modelList.add(PostModel.fromJson(v));
             }
@@ -127,7 +134,8 @@ class HomeBloc extends Bloc<HomeEvent, ValidHomeState> {
             .get();
         _modelList[event.index] = updatedPost.data()!;
       });
-      emit(ValidHomeState().copyWith());
+      emit(const ValidHomeState().copyWith(
+          isLiked: event.like, status: PostStatus.success, posts: _modelList));
     } on FirebaseException catch (e) {
       emit(const ValidHomeState().copyWith(status: PostStatus.failure));
     } catch (e, s) {

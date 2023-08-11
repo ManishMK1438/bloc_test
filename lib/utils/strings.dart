@@ -7,6 +7,7 @@ class AppImages {
   static const evening = "assets/images/evening.jpg";
   static const night = "assets/images/night.jpg";
   static const error = "assets/gif/error.gif";
+  static const notFound = "assets/images/emptyData.jpg";
 }
 
 class AppStrings {
@@ -58,6 +59,7 @@ class AppStrings {
   static const dayAgo = "day ago";
   static const daysAgo = "days ago";
   static const scrollEnd = "You've reached the end!";
+  static const noDataFound = "No data found!";
 }
 
 class AppStr {

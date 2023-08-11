@@ -17,6 +17,7 @@ import 'package:hive/hive.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 import '../../app_blocs/screen_blocs/home_bloc/home_events.dart';
+import '../../app_widgets/error_widgets/no_data_found.dart';
 import '../../utils/fonts.dart';
 import '../../utils/strings.dart';
 
@@ -238,7 +239,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         } else {
                           return const Center(child: ScrollLoader());
                         }
-
                         /*else {
                           if (state.hasReachedMax == false) {
 
@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               }
-              return const SizedBox.shrink();
+              return const NoDataFoundWidget();
             }),
           ),
         ),

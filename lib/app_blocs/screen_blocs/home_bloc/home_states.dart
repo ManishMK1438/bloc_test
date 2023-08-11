@@ -1,7 +1,7 @@
 import 'package:bloc_test/models/post_model/post_model.dart';
 import 'package:equatable/equatable.dart';
 
-enum PostStatus { initial, loading, success, failure }
+enum PostStatus { loading, success, failure, empty }
 
 //abstract class HomeState extends Equatable {}
 /*
@@ -18,24 +18,28 @@ class ValidHomeState extends Equatable {
     this.status = PostStatus.loading,
     this.posts = const <PostModel>[],
     this.hasReachedMax = false,
+    this.isLiked = false,
     this.error = "",
   });
 
   final PostStatus status;
   final List<PostModel> posts;
   final bool hasReachedMax;
+  final bool isLiked;
   final String error;
 
   ValidHomeState copyWith({
     PostStatus? status,
     List<PostModel>? posts,
     String? error,
+    bool? isLiked,
     bool? hasReachedMax,
   }) {
     return ValidHomeState(
       status: status ?? this.status,
       posts: posts ?? this.posts,
       error: error ?? this.error,
+      isLiked: isLiked ?? this.isLiked,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
