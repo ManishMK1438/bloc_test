@@ -1,4 +1,3 @@
-import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_blocs.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
 import 'package:bloc_test/app_functions/app_functions.dart';
 import 'package:bloc_test/app_widgets/network_image.dart';
@@ -8,6 +7,8 @@ import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 
 class PostWidget extends StatelessWidget {
   final PostModel model;

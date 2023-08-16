@@ -4,7 +4,7 @@ import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
 import 'package:bloc_test/models/post_model/post_model.dart';
 import 'package:bloc_test/utils/constants.dart';
 import 'package:bloc_test/utils/strings.dart';
-import 'package:cloud_firestore/cloud_firestorease_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class HomeBloc extends Bloc<HomeEvent, ValidHomeState> {

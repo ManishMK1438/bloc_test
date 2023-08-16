@@ -1,4 +1,4 @@
-import 'package:bloc/blocs.dart';
+import 'package:bloc/bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/interaction_state.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/post_interaction_event.dart';
 import 'package:firebase_auth/firebase_auth.dart';
