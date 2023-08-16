@@ -7,7 +7,6 @@ import 'package:bloc_test/app_widgets/loader/app_loader.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
 import 'package:bloc_test/screens/add_content_screens/add_post_screen.dart';
 import 'package:bloc_test/screens/add_content_screens/add_shorts_screen.dart';
-import 'package:bloc_test/screens/screen_widgets/post_widget.dart';
 import 'package:bloc_test/utils/constants.dart';
 import 'package:bloc_test/utils/navigation_file.dart';
 import 'package:flutter/material.dart';
@@ -17,12 +16,14 @@ import 'package:hive/hive.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 import '../../app_blocs/screen_blocs/home_bloc/home_events.dart';
+import '../../app_blocs/screen_blocs/home_bloc/post_interaction_bloc/interaction_bloc.dart';
 import '../../app_widgets/error_widgets/no_data_found.dart';
 import '../../utils/fonts.dart';
 import '../../utils/strings.dart';
+import '../screen_widgets/post_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -135,8 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
               StreamBuilder<DateTime>(
                   stream: timer,
                   builder: (context, snapShot) {
-                    //print(snapShot.data);
-                    // if (snapShot.hasData) {
                     return CustomSliverAppBar(
                       implyLeading: false,
                       expandedHeight: sliverExpandedHeight,
@@ -155,7 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Fonts().vigaFont(size: 20, color: Colors.white),
                           ),
                         ),
-                        //collapseMode: CollapseMode.pin,
                         background: Image.asset(
                             _images(snapShot.data ?? DateTime.now()),
                             fit: BoxFit.fill,
@@ -187,78 +185,60 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     );
-                    // }
-                    // return const SliverAppBar();
                   })
             ];
           },
           body: Padding(
             padding: const EdgeInsets.only(left: appPadding, right: appPadding),
             child: BlocConsumer<HomeBloc, ValidHomeState>(
-                /*listenWhen: (old, current) => current is! ValidHomeState,*/
-                // buildWhen: (old, current) => current.status == PostStatus.success,
-                listener: (context, state) {
-              //if (state is ErrorHomeState) {
-              //CustomSnackBar().customErrorSnackBar(context, state.error);
-              //}
-            }, builder: (context, state) {
-              // print(state.toString());
-              if (state.status == PostStatus.loading) {
-                return const AppLoader();
-              } else if (state.status == PostStatus.failure) {
-                return AppErrorWidget(error: state.error);
-              } else if (state.status == PostStatus.success) {
-                return LazyLoadScrollView(
-                  onEndOfPage: () {
-                    BlocProvider.of<HomeBloc>(context)
-                        .add(LoadInitialDataHomeEvent(refresh: false));
-                  },
-                  isLoading: false,
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<HomeBloc>(context)
-                          .add(LoadInitialDataHomeEvent(refresh: true));
-                    },
-                    child: ListView.separated(
-                      separatorBuilder: (ctx, ind) => const Divider(),
-                      itemBuilder: (ctx, index) {
-                        // print("index $index");
-                        //  print("length ${state.status}");
-                        if (index < state.posts.length) {
-                          var post = state.posts[index];
-                          return PostWidget(
-                            model: post,
-                            index: index,
-                          );
-                        } else if (state.hasReachedMax) {
-                          return Text(
-                            AppStrings.scrollEnd,
-                            textAlign: TextAlign.center,
-                            style: Fonts().inter(size: 14),
-                          );
-                        } else {
-                          return const Center(child: ScrollLoader());
-                        }
-                        /*else {
-                          if (state.hasReachedMax == false) {
-
-                          } else if (state.hasReachedMax) {
-                            return Text(
-                              AppStrings.scrollEnd,
-                              textAlign: TextAlign.center,
-                              style: Fonts().inter(size: 14),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }*/
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state.status == PostStatus.loading) {
+                    return const AppLoader();
+                  } else if (state.status == PostStatus.failure) {
+                    return AppErrorWidget(error: state.error);
+                  } else if (state.status == PostStatus.success) {
+                    return LazyLoadScrollView(
+                      onEndOfPage: () {
+                        BlocProvider.of<HomeBloc>(context)
+                            .add(LoadInitialDataHomeEvent(refresh: false));
                       },
-                      itemCount: state.posts.toSet().toList().length + 1,
-                    ),
-                  ),
-                );
-              }
-              return const NoDataFoundWidget();
-            }),
+                      isLoading: false,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          BlocProvider.of<HomeBloc>(context)
+                              .add(LoadInitialDataHomeEvent(refresh: true));
+                        },
+                        child: ListView.separated(
+                          separatorBuilder: (ctx, ind) => const Divider(),
+                          itemBuilder: (ctx, index) {
+                            if (index < state.posts.length) {
+                              var post = state.posts[index];
+                              return BlocProvider(
+                                create: (BuildContext context) =>
+                                    PostInteractionBloc(),
+                                child: PostWidget(
+                                  model: post,
+                                  index: index,
+                                ),
+                              );
+                            } else if (state.hasReachedMax) {
+                              return Text(
+                                AppStrings.scrollEnd,
+                                textAlign: TextAlign.center,
+                                style: Fonts().inter(size: 14),
+                              );
+                            } else {
+                              return const Center(child: ScrollLoader());
+                            }
+                          },
+                          itemCount: state.posts.toSet().toList().length + 1,
+                        ),
+                      ),
+                    );
+                  }
+                  return const NoDataFoundWidget();
+                }),
           ),
         ),
       ),

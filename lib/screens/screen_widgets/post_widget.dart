@@ -1,5 +1,4 @@
-import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
-import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_events.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_blocs.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
 import 'package:bloc_test/app_functions/app_functions.dart';
 import 'package:bloc_test/app_widgets/network_image.dart';
@@ -71,10 +70,7 @@ class PostWidget extends StatelessWidget {
               Tooltip(
                 message: AppStrings.like,
                 child: TextButton.icon(
-                    onPressed: () {
-                      BlocProvider.of<HomeBloc>(context).add(LikedHomeEvent(
-                          post: model, index: index, like: model.likedByMe!));
-                    },
+                    onPressed: () {},
                     icon: model.likedByMe!
                         ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
                         : const FaIcon(FontAwesomeIcons.thumbsUp),

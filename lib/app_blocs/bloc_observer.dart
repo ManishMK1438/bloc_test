@@ -12,7 +12,7 @@ class GlobalObserver extends BlocObserver {
   void onCreate(BlocBase bloc) {
     // TODO: implement onCreate
     super.onCreate(bloc);
-    debugPrint('${bloc.runtimeType} created');
+    // debugPrint('${bloc.runtimeType} created');
   }
 
   @override
@@ -25,7 +25,7 @@ class GlobalObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    debugPrint('${bloc.runtimeType} $change');
+    //debugPrint('${bloc.runtimeType} $change');
   }
 
   @override
