@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -5,7 +7,7 @@ class GlobalObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    debugPrint('${bloc.runtimeType} $event');
+    //debugPrint('${bloc.runtimeType} $event');
   }
 
   @override
@@ -31,7 +33,7 @@ class GlobalObserver extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    debugPrint('${bloc.runtimeType} $transition');
+    log('${bloc.runtimeType} $transition');
   }
 
   @override

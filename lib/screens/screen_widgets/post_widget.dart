@@ -1,4 +1,6 @@
-import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/interaction_bloc.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/interaction_state.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/post_interaction_event.dart';
 import 'package:bloc_test/app_functions/app_functions.dart';
 import 'package:bloc_test/app_widgets/network_image.dart';
 import 'package:bloc_test/models/post_model/post_model.dart';
@@ -7,8 +9,6 @@ import 'package:bloc_test/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 
 class PostWidget extends StatelessWidget {
   final PostModel model;
@@ -61,43 +61,91 @@ class PostWidget extends StatelessWidget {
   }
 
   Widget _postInteractions(BuildContext context) {
-    return BlocConsumer<HomeBloc, ValidHomeState>(
-        listener: (ctx, state) {},
-        // buildWhen: (previous, current) => current.isLiked != previous.isLiked,
+    return BlocBuilder<PostInteractionBloc, PostInteractionState>(
         builder: (context, state) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Tooltip(
-                message: AppStrings.like,
-                child: TextButton.icon(
-                    onPressed: () {},
-                    icon: model.likedByMe!
-                        ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
-                        : const FaIcon(FontAwesomeIcons.thumbsUp),
-                    label: Text("${model.likes ?? 0} ${AppStrings.like}")),
-              ),
-              Tooltip(
-                message: AppStrings.comment,
-                child: TextButton.icon(
-                    onPressed: () {},
-                    icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
-                    label: const Text(AppStrings.comment)),
-              ),
-              Tooltip(
-                message: AppStrings.save,
-                child: TextButton.icon(
-                    onPressed: () {},
-                    icon: model.saved!
-                        ? const FaIcon(FontAwesomeIcons.solidBookmark)
-                        : const FaIcon(FontAwesomeIcons.bookmark),
-                    label: model.saved!
-                        ? const Text(AppStrings.saved)
-                        : const Text(AppStrings.save)),
-              ),
-            ],
-          );
-        });
+      if (state.status == InteractionsStatus.like ||
+          state.status == InteractionsStatus.save ||
+          state.status == InteractionsStatus.unSave ||
+          state.status == InteractionsStatus.dislike) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Tooltip(
+              message: AppStrings.like,
+              child: TextButton.icon(
+                  onPressed: () {
+                    BlocProvider.of<PostInteractionBloc>(context)
+                        .add(LikeIntBtnPressedEvent(post: state.post!));
+                  },
+                  icon: state.post!.likedByMe!
+                      ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
+                      : const FaIcon(FontAwesomeIcons.thumbsUp),
+                  label: Text("${state.post!.likes ?? 0} ${AppStrings.like}")),
+            ),
+            Tooltip(
+              message: AppStrings.comment,
+              child: TextButton.icon(
+                  onPressed: () {},
+                  icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
+                  label: const Text(AppStrings.comment)),
+            ),
+            Tooltip(
+              message: AppStrings.save,
+              child: TextButton.icon(
+                  onPressed: () {
+                    BlocProvider.of<PostInteractionBloc>(context)
+                        .add(SaveIntBtnPressedEvent(post: state.post!));
+                  },
+                  icon: state.post!.saved!
+                      ? const FaIcon(FontAwesomeIcons.solidBookmark)
+                      : const FaIcon(FontAwesomeIcons.bookmark),
+                  label: state.post!.saved!
+                      ? const Text(AppStrings.saved)
+                      : const Text(AppStrings.save)),
+            ),
+          ],
+        );
+      } else {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Tooltip(
+              message: AppStrings.like,
+              child: TextButton.icon(
+                  onPressed: () {
+                    BlocProvider.of<PostInteractionBloc>(context)
+                        .add(LikeIntBtnPressedEvent(post: model));
+                  },
+                  icon: model.likedByMe!
+                      ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
+                      : const FaIcon(FontAwesomeIcons.thumbsUp),
+                  label: Text("${model.likes ?? 0} ${AppStrings.like}")),
+            ),
+            Tooltip(
+              message: AppStrings.comment,
+              child: TextButton.icon(
+                  onPressed: () {},
+                  icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
+                  label: const Text(AppStrings.comment)),
+            ),
+            Tooltip(
+              message: AppStrings.save,
+              child: TextButton.icon(
+                  onPressed: () {
+                    BlocProvider.of<PostInteractionBloc>(context)
+                        .add(SaveIntBtnPressedEvent(post: model));
+                  },
+                  icon: model.saved!
+                      ? const FaIcon(FontAwesomeIcons.solidBookmark)
+                      : const FaIcon(FontAwesomeIcons.bookmark),
+                  label: model.saved!
+                      ? const Text(AppStrings.saved)
+                      : const Text(AppStrings.save)),
+            ),
+          ],
+        );
+      }
+    });
   }
 
   @override

@@ -13,11 +13,6 @@ class LikeIntBtnPressedEvent extends PostInteractionEvent {
 
   @override
   List<Object?> get props => [post];
-
-  @override
-  String toString() {
-    return '''totalLikes ${post.likes}, isLiked ${post.likedByMe}''';
-  }
 }
 
 class SaveIntBtnPressedEvent extends PostInteractionEvent {
@@ -30,9 +25,4 @@ class SaveIntBtnPressedEvent extends PostInteractionEvent {
 
   @override
   List<Object?> get props => [post];
-
-  @override
-  String toString() {
-    return '''isSaved ${post.saved}''';
-  }
 }

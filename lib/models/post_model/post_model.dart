@@ -29,7 +29,11 @@ class PostModel extends Equatable {
       this.user});
 
   int? updateLikes() {
-    return likes = likes! + 1;
+    if (likes == null) {
+      return likes = 1;
+    } else {
+      return likes = likes! + 1;
+    }
   }
 
   int? removeLikes() {
@@ -41,13 +45,14 @@ class PostModel extends Equatable {
     return likes;
   }
 
-  bool liked(bool isLiked) {
-    isLiked = !isLiked;
-    return isLiked;
+  bool liked() {
+    likedByMe = !likedByMe!;
+    return likedByMe!;
   }
 
-  bool isSaved(bool isSaved) {
-    return isSaved = !isSaved;
+  bool isSaved() {
+    saved = !saved!;
+    return saved!;
   }
 
   PostModel.fromJson(Map<String, dynamic> json) {
@@ -94,4 +99,10 @@ class PostModel extends Equatable {
         desc,
         user
       ];
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '''PostModel {likes: $likes, likeByMe: $likedByMe, save: $saved}''';
+  }
 }

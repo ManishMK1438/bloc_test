@@ -1,47 +1,37 @@
 import 'package:bloc_test/models/post_model/post_model.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class PostInteractionState extends Equatable {}
+enum InteractionsStatus { initial, like, dislike, save, unSave, error }
 
-class InitialPostState extends PostInteractionState {
-  @override
-  List<Object?> get props => [];
-}
+class PostInteractionState extends Equatable {
+  final PostModel? post;
+  final InteractionsStatus status;
+  final String error;
+  const PostInteractionState({
+    this.post,
+    this.status = InteractionsStatus.initial,
+    this.error = "",
+  });
 
-class LikePostState extends PostInteractionState {
-  final PostModel post;
-  LikePostState({required this.post});
-
-  LikePostState copyWith({
+  PostInteractionState copyWith({
     PostModel? post,
+    InteractionsStatus? status,
+    String? error,
   }) {
-    return LikePostState(post: post ?? this.post);
+    return PostInteractionState(
+      post: post ?? this.post,
+      status: status ?? this.status,
+      error: error ?? this.error,
+    );
   }
 
   @override
-  List<Object?> get props => [post];
+  // TODO: implement props
+  List<Object?> get props => [post, status, error];
 
   @override
   String toString() {
-    return '''totalLikes ${post.likes}, isLiked ${post.likedByMe}''';
-  }
-}
-
-class SavePostState extends PostInteractionState {
-  final PostModel post;
-  SavePostState({required this.post});
-
-  SavePostState copyWith({
-    PostModel? post,
-  }) {
-    return SavePostState(post: post ?? this.post);
-  }
-
-  @override
-  List<Object?> get props => [post];
-
-  @override
-  String toString() {
-    return '''isSaved ${post.saved}''';
+    // TODO: implement toString
+    return '''PostInteractionState { post: ${post.toString()}, status: $status, error: $error}''';
   }
 }
