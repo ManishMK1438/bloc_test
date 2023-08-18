@@ -1,4 +1,5 @@
 import 'package:bloc_test/app_blocs/screen_blocs/content_blocs/post_screen_bloc/post_bloc.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/content_blocs/upload_reel_bloc/reel_bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_states.dart';
 import 'package:bloc_test/app_widgets/app_bar.dart';
@@ -110,7 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     onTap: () {
                       AppNavigation.push(
-                          context: context, screen: const AddShortsScreen());
+                          context: context,
+                          screen: BlocProvider(
+                              create: (context) => UploadReelBloc(),
+                              child: AddShortsScreen()));
                     },
                     leading: const FaIcon(FontAwesomeIcons.fileVideo),
                     title: Text(

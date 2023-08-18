@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class FeedShortWidget extends StatelessWidget {
+class FeedShortWidget extends StatefulWidget {
   const FeedShortWidget({super.key});
+
+  @override
+  State<FeedShortWidget> createState() => _FeedShortWidgetState();
+}
+
+class _FeedShortWidgetState extends State<FeedShortWidget> {
+  bool _isExpanded = false;
 
   Widget _feedInteractions() {
     return Positioned(
@@ -31,14 +38,18 @@ class FeedShortWidget extends StatelessWidget {
             title: Text("Data"),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
             child: AnimatedContainer(
               constraints: const BoxConstraints(maxHeight: 200),
               duration: const Duration(milliseconds: 100),
-              child: const SingleChildScrollView(
+              child: SingleChildScrollView(
                 child: Text(
                   "akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb akbhds kd cbvksdvbc s dcvsdg csd gcdv csskdu cvbzxjcask casb ckasb cu asku ksa dbksaubbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbAUVXS SAUb sxuAV SUVAS U",
-                  maxLines: 3,
+                  maxLines: _isExpanded ? null : 3,
                   overflow: TextOverflow.fade,
                 ),
               ),

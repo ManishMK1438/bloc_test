@@ -67,103 +67,68 @@ class PostWidget extends StatelessWidget {
           state.status == InteractionsStatus.save ||
           state.status == InteractionsStatus.unSave ||
           state.status == InteractionsStatus.dislike) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Tooltip(
-              message: AppStrings.like,
-              child: TextButton.icon(
-                  onPressed: () {
-                    BlocProvider.of<PostInteractionBloc>(context)
-                        .add(LikeIntBtnPressedEvent(post: state.post!));
-                  },
-                  icon: state.post!.likedByMe!
-                      ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
-                      : const FaIcon(FontAwesomeIcons.thumbsUp),
-                  label: Text("${state.post!.likes ?? 0} ${AppStrings.like}")),
-            ),
-            Tooltip(
-              message: AppStrings.comment,
-              child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
-                  label: const Text(AppStrings.comment)),
-            ),
-            Tooltip(
-              message: AppStrings.save,
-              child: TextButton.icon(
-                  onPressed: () {
-                    BlocProvider.of<PostInteractionBloc>(context)
-                        .add(SaveIntBtnPressedEvent(post: state.post!));
-                  },
-                  icon: state.post!.saved!
-                      ? const FaIcon(FontAwesomeIcons.solidBookmark)
-                      : const FaIcon(FontAwesomeIcons.bookmark),
-                  label: state.post!.saved!
-                      ? const Text(AppStrings.saved)
-                      : const Text(AppStrings.save)),
-            ),
-          ],
-        );
+        return _postInteractionWidget(state.post!, context);
       } else {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Tooltip(
-              message: AppStrings.like,
-              child: TextButton.icon(
-                  onPressed: () {
-                    BlocProvider.of<PostInteractionBloc>(context)
-                        .add(LikeIntBtnPressedEvent(post: model));
-                  },
-                  icon: model.likedByMe!
-                      ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
-                      : const FaIcon(FontAwesomeIcons.thumbsUp),
-                  label: Text("${model.likes ?? 0} ${AppStrings.like}")),
-            ),
-            Tooltip(
-              message: AppStrings.comment,
-              child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
-                  label: const Text(AppStrings.comment)),
-            ),
-            Tooltip(
-              message: AppStrings.save,
-              child: TextButton.icon(
-                  onPressed: () {
-                    BlocProvider.of<PostInteractionBloc>(context)
-                        .add(SaveIntBtnPressedEvent(post: model));
-                  },
-                  icon: model.saved!
-                      ? const FaIcon(FontAwesomeIcons.solidBookmark)
-                      : const FaIcon(FontAwesomeIcons.bookmark),
-                  label: model.saved!
-                      ? const Text(AppStrings.saved)
-                      : const Text(AppStrings.save)),
-            ),
-          ],
-        );
+        return _postInteractionWidget(model, context);
       }
     });
   }
 
+  Widget _postInteractionWidget(PostModel post, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Tooltip(
+          message: AppStrings.like,
+          child: TextButton.icon(
+              onPressed: () {
+                BlocProvider.of<PostInteractionBloc>(context)
+                    .add(LikeIntBtnPressedEvent(post: post));
+              },
+              icon: post.likedByMe!
+                  ? const FaIcon(FontAwesomeIcons.solidThumbsUp)
+                  : const FaIcon(FontAwesomeIcons.thumbsUp),
+              label: Text("${post.likes ?? 0} ${AppStrings.like}")),
+        ),
+        Tooltip(
+          message: AppStrings.comment,
+          child: TextButton.icon(
+              onPressed: () {},
+              icon: const FaIcon(FontAwesomeIcons.solidCommentDots),
+              label: const Text(AppStrings.comment)),
+        ),
+        Tooltip(
+          message: AppStrings.save,
+          child: TextButton.icon(
+              onPressed: () {
+                BlocProvider.of<PostInteractionBloc>(context)
+                    .add(SaveIntBtnPressedEvent(post: post));
+              },
+              icon: post.saved!
+                  ? const FaIcon(FontAwesomeIcons.solidBookmark)
+                  : const FaIcon(FontAwesomeIcons.bookmark),
+              label: post.saved!
+                  ? const Text(AppStrings.saved)
+                  : const Text(AppStrings.save)),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          _postTile(),
-          const SizedBox(
-            height: 10,
-          ),
-          _postMedia(),
-          const SizedBox(
-            height: 10,
-          ),
-          _postInteractions(context)
-        ],
-      ),
+    return Column(
+      children: [
+        _postTile(),
+        const SizedBox(
+          height: 10,
+        ),
+        _postMedia(),
+        const SizedBox(
+          height: 10,
+        ),
+        _postInteractions(context)
+      ],
     );
   }
 }

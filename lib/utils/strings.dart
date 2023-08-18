@@ -50,8 +50,12 @@ class AppStrings {
   static const shorts = "Shorts";
   static const addPost = "Add Post";
   static const selectImage = "Select Image";
+  static const selectVideo = "Select Video";
   static const selectImageToPost = "Select an image to post";
+  static const selectVideoToPost = "Select a video to post";
   static const createPost = "Create Post";
+  static const addThumbnail = "Add Thumbnail";
+  static const uploadReel = "Upload Reel";
   static const postDesc = "Post Description";
   static const postedSuccessfully = "Posted Successfully";
   static const minAgo = "min ago";
@@ -66,5 +70,7 @@ class AppStr {
   static const userHiveBox = "UserHive";
   static const collectionUsers = "Users";
   static const postImages = "PostImages";
+  static const thumbnailImages = "ThumbnailImages";
+  static const reelVideos = "ReelVideos";
   static const userPosts = "UserPosts";
 }

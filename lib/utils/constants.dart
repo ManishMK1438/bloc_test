@@ -10,3 +10,4 @@ const defaultRadius = 24.0;
 const postLimit = 5;
 const scrollLoaderSize = 18.0;
 const imageLoaderSize = 40.0;
+const reelDuration = Duration(seconds: 15);

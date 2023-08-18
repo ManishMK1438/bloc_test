@@ -58,8 +58,9 @@ dependencies:
   # Notifications
   flutter_local_notifications: ^15.1.0+1
 
-  # Video player
+  # Video
   video_player: ^2.7.0
+  video_thumbnail: ^0.5.3
 
   # Images
   cached_network_image: ^3.2.3

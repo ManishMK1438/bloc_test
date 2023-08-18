@@ -1,17 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/interaction_state.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/post_interaction_bloc/post_interaction_event.dart';
+import 'package:bloc_test/utils/strings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../../app_functions/app_functions.dart';
-import '../../../../utils/strings.dart';
 
 class PostInteractionBloc
     extends Bloc<PostInteractionEvent, PostInteractionState> {
-  final User? _currentUser = FirebaseAuth.instance.currentUser;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  final _functions = AppFunctions();
   PostInteractionBloc() : super(const PostInteractionState()) {
     on<LikeIntBtnPressedEvent>((event, emit) => _likePressed(event, emit));
     on<SaveIntBtnPressedEvent>((event, emit) => _savePressed(event, emit));
