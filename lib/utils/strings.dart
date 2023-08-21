@@ -73,4 +73,5 @@ class AppStr {
   static const thumbnailImages = "ThumbnailImages";
   static const reelVideos = "ReelVideos";
   static const userPosts = "UserPosts";
+  //static const reelVideos = "reelVideos";
 }

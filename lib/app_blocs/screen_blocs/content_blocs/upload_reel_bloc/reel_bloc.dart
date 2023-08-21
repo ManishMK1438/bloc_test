@@ -21,12 +21,16 @@ class UploadReelBloc extends Bloc<UploadReelEvent, UploadReelState> {
 
   _fieldEntered(ReelFieldEnteredEvent event, Emitter<UploadReelState> emit) {
     if (event.desc.trim().isNotEmpty && event.video != null) {
+      print("valid");
       emit(state.copyWith(status: UploadReelStatus.valid));
     } else if (event.video != null) {
+      print("video");
       emit(state.copyWith(status: UploadReelStatus.videoSelected));
     } else if (event.thumbnail != null) {
+      print("thumbnail");
       emit(state.copyWith(status: UploadReelStatus.thumbnailSelected));
     } else {
+      print("initial");
       emit(state.copyWith(status: UploadReelStatus.initial));
     }
   }
@@ -79,7 +83,7 @@ class UploadReelBloc extends Bloc<UploadReelEvent, UploadReelState> {
         "likedByMe": false,
         "postedOn": DateTime.now().toString(),
       };
-      await _fireStore.collection(AppStr.userPosts).doc(postId).set(map);
+      await _fireStore.collection(AppStr.reelVideos).doc(postId).set(map);
       emit(state.copyWith(status: UploadReelStatus.success));
     } on FirebaseException catch (e) {
       emit(state.copyWith(

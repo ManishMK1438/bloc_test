@@ -18,13 +18,22 @@ import '../../utils/decorations/text_field_decoration.dart';
 import '../../utils/fonts.dart';
 import '../../utils/strings.dart';
 
-class AddShortsScreen extends StatelessWidget {
+class AddShortsScreen extends StatefulWidget {
   AddShortsScreen({super.key});
 
+  @override
+  State<AddShortsScreen> createState() => _AddShortsScreenState();
+}
+
+class _AddShortsScreenState extends State<AddShortsScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _descController = TextEditingController();
+
   File? _selectedVideo;
+
   final _picker = ImagePicker();
+
   File? _thumbnail;
 
   _fieldsEntered(context) {
@@ -67,6 +76,7 @@ class AddShortsScreen extends StatelessWidget {
         aspectRatio: 1,
         child: BlocBuilder<UploadReelBloc, UploadReelState>(
           builder: (context, state) {
+            print(state.status);
             /*if (state.status == UploadReelStatus.initial) {
               return Container(
                 decoration: BoxDecoration(
@@ -75,7 +85,9 @@ class AddShortsScreen extends StatelessWidget {
                 child: _selectImgButton(context),
               );
             } else*/
-            if (state.status == UploadReelStatus.videoSelected) {
+            if (state.status == UploadReelStatus.videoSelected ||
+                state.status == UploadReelStatus.valid ||
+                state.status == UploadReelStatus.loading) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(defaultRadius),
                 child: SelectedVideoPlayerWidget(
@@ -103,41 +115,46 @@ class AddShortsScreen extends StatelessWidget {
 
   Widget _thumbnailWidget(BuildContext context) {
     return BlocBuilder<UploadReelBloc, UploadReelState>(
-        buildWhen: (previous, current) =>
-            current.status != UploadReelStatus.loading ||
-            current.status != UploadReelStatus.initial,
-        builder: (context, state) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                  onPressed: () {
-                    _picker.pickImage(source: ImageSource.gallery).then((file) {
-                      if (file != null) {
-                        _thumbnail = File(file.path);
-                        _fieldsEntered(context);
-                      }
-                    });
-                  },
-                  child: Text(
-                    AppStrings.addThumbnail,
-                    style: Fonts().inter(size: 16),
-                  )),
-              if (_thumbnail != null)
-                SizedBox(
-                  width: 150,
-                  height: 75,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.file(
-                      _thumbnail!,
-                      fit: BoxFit.fill,
-                    ),
+        buildWhen: (previous, current) {
+      if (current.status == UploadReelStatus.initial) {
+        return false;
+      } else {
+        return true;
+      }
+    }, builder: (context, state) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextButton(
+              onPressed: () {
+                _picker.pickImage(source: ImageSource.gallery).then((file) {
+                  if (file != null) {
+                    _thumbnail = File(file.path);
+                    _fieldsEntered(context);
+                    setState(() {});
+                  }
+                });
+              },
+              child: Text(
+                AppStrings.addThumbnail,
+                style: Fonts().inter(size: 16),
+              )),
+          if (_thumbnail != null)
+            if (state.status != UploadReelStatus.initial)
+              SizedBox(
+                width: 150,
+                height: 75,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.file(
+                    _thumbnail!,
+                    fit: BoxFit.fill,
                   ),
-                )
-            ],
-          );
-        });
+                ),
+              )
+        ],
+      );
+    });
   }
 
   Widget _descriptionField(BuildContext context) {
@@ -176,7 +193,8 @@ class AddShortsScreen extends StatelessWidget {
       },
       builder: (context, state) {
         if (state.status == UploadReelStatus.initial ||
-            state.status == UploadReelStatus.videoSelected) {
+            state.status == UploadReelStatus.videoSelected ||
+            state.status == UploadReelStatus.thumbnailSelected) {
           return AppButtons()
               .primaryButton(text: AppStrings.post, color: secondaryColor);
         } else if (state.status == UploadReelStatus.loading) {

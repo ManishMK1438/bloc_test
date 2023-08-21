@@ -1,5 +1,6 @@
 import 'package:bloc_test/app_blocs/bloc_observer.dart';
 import 'package:bloc_test/app_blocs/connectivity_blocs/internet_blocs.dart';
+import 'package:bloc_test/app_blocs/screen_blocs/feed_bloc/feed_bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
 import 'package:bloc_test/models/user_model/user_model.dart';
@@ -48,6 +49,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => InternetBloc()),
         BlocProvider(
           create: (context) => HomeBloc(),
+        ),
+        BlocProvider(
+          create: (context) => FeedBloc(),
         ),
       ],
       child: MaterialApp(
