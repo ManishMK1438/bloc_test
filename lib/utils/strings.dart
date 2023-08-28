@@ -8,6 +8,7 @@ class AppImages {
   static const night = "assets/images/night.jpg";
   static const error = "assets/gif/error.gif";
   static const notFound = "assets/images/emptyData.jpg";
+  static const appIcon = '@mipmap/ic_launcher';
 }
 
 class AppStrings {

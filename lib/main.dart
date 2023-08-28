@@ -4,6 +4,7 @@ import 'package:bloc_test/app_blocs/screen_blocs/feed_bloc/feed_bloc.dart';
 import 'package:bloc_test/app_blocs/screen_blocs/home_bloc/home_bloc.dart';
 import 'package:bloc_test/local_storage/hive/hive_class.dart';
 import 'package:bloc_test/models/user_model/user_model.dart';
+import 'package:bloc_test/notification.dart';
 import 'package:bloc_test/screens/dashboard_screens/tabs_screen.dart';
 import 'package:bloc_test/screens/splash_screen/splash_screen.dart';
 import 'package:bloc_test/utils/colors.dart';
@@ -15,14 +16,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
 import 'app_blocs/screen_blocs/tabs_bloc/tabs_bloc.dart';
+import 'app_widgets/error_widgets/app_error_widgets.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {};
+  ErrorWidget.builder = (FlutterErrorDetails details) =>
+      AppErrorWidget(error: details.exception.toString());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseApi().initNotification();
   await HiveClass().init();
   Hive.registerAdapter(UserModelAdapter());
   await HiveClass().openBox(boxName: AppStr.userHiveBox);
   Bloc.observer = GlobalObserver();
+
   runApp(const MyApp());
 }
 
@@ -61,6 +70,7 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
             primaryColor: primaryColor,
           ),
+          navigatorKey: navigatorKey,
           home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
